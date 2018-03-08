@@ -1,77 +1,77 @@
 import React, { Component } from 'react';
 import './App.css';
-import Input from './components/input'
 import {reduxForm,Field,SubmissionError, focus} from 'redux-form'
 import {required,noEmpty, tooShort, isNumber} from './validators'
 import {serverValidate} from './asyncValidator'
-import TextField from 'material-ui/TextField'
-import Textinput from './components/textInput'
-export class App extends Component {
-  submitMe(value){
-    return serverValidate(value)
+import SelectInput from './components/selectInput'
+import MenuItem from 'material-ui/MenuItem'
+import TextInput from './components/textInput'
+import RaisedButton from 'material-ui/RaisedButton'
+export const App = ({submitSucceeded,error,handleSubmit,pristine, submitting})=>{
+
+  const submitMe =(value)=> serverValidate(value)
+  const btnStyle={
+    margin:'15px 0 15px 0',
+    textAlign:'center'
   }
-  render() {
-    let successMessage;
-    if(this.props.submitSucceeded){
-      successMessage = <div>Complaint successfully submitted</div>
-    }
-    let errorMessage;
-    if(this.props.error){
-      errorMessage = <div>{this.props.error}</div>
-    }
-    return (
-      <div className="App">
-        <header className="App-header">
-          <h1 className="App-title">Report problem with your delivery</h1>
-          <form onSubmit={this.props.handleSubmit(value =>(this.submitMe(value)))}>
-            <Field 
-              component={Textinput}
-              label="tracking number"
-              name="trackingNumber"
-              // validate={[required,noEmpty,tooShort,isNumber]}
-            />
+  let successMessage;
+  if(submitSucceeded){
+    successMessage = <div>Complaint successfully submitted</div>
+  }
+  let errorMessage;
+  if(error){
+    errorMessage = <div>{error}</div>
+  }
+  const myStyle={
+    fontSize:'18px'
+  }
+  return (
+    <div className="App">
+      <header>
+        <h2 >Report problem with your delivery</h2>
+        <form onSubmit={handleSubmit(value =>(submitMe(value)))}>
+          <div>
+          <Field
+            label="tracking number"
+            name="trackingNumber"
+            type="text"
+            component={TextInput}
+            style={myStyle}
+            validate={[required,noEmpty,tooShort,isNumber]}
+          />
+          </div>
+          <div>
             <Field
-              component={Input}
+              style={myStyle}
+              component={SelectInput}
               label="what is your issue"
-              name="issue"
-              element='select'>
-                <option>
-                </option>
-                <option value="not-delivered">
-                  My delivery has not arrived
-                </option>
-                <option value="wrong-item">
-                  The Wrong item was delivered
-                </option>            
-                <option value="missing-part">
-                  Part of my order is missing
-                </option>            
-                <option value="damaged">
-                  Some of my order arrived damaged
-                </option>
-                <option value="other">
-                  Other(give more detail)
-                </option>
+              name="issue">
+                <MenuItem value="not-delivered" primaryText="not-delivered"/>
+                <MenuItem value="wrong-item" primaryText="wrong-item" />
+                <MenuItem value="missing-part" primaryText="missing-part"/>
+                <MenuItem  value="damaged" primaryText="damaged"/>
+                <MenuItem value="other" primaryText="other"/>
             </Field>
-            <Field 
-              component={Input}
-              label="Give it more detail(optional)"
-              name="details"
-              element="textarea"
-              />
-            <div className="form-control">
-                <button type="submit" disabled={this.props.pristine || this.props.submitting}>
-                    Submit
-                </button>
-                {successMessage}
-                {errorMessage}
-            </div>
-        </form>
-        </header>
-        
-      </div>
-    );
-  }
+          </div>
+
+          <Field 
+            style={myStyle}
+            component={TextInput}
+            multiLine={true}
+            label="Give it more detail(optional)"
+            name="details"
+            />
+          <div>
+              <RaisedButton label="Submit" primary={true} style={btnStyle}
+              fullWidth={true}
+              type="submit" disabled={pristine || submitting} />
+              {successMessage}
+              {errorMessage}
+          </div>
+      </form>
+      </header>
+    </div>
+  )
 }
 
 export default reduxForm({

@@ -1,13 +1,15 @@
 import React from 'react'
 import TextField from 'material-ui/TextField'
-export default function Textinput(props){
-    console.log(props)
+export default function TextInput({multiLine,input, label,meta,...rest}){
     return(
         <TextField 
-        hintText={props.label}
-        floatingLabelText={props.label}
-        errorText={props.meta.touch && props.meta.error}
-        {...props}
+        {...input}
+        {...rest}
+        multiLine={multiLine}
+        fullWidth={true}
+        hintText={label}
+        floatingLabelText={label}
+        errorText={meta.touched && meta.error}
         />
     )
 }
