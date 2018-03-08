@@ -4,7 +4,7 @@ import Input from './components/input'
 import {reduxForm,Field,SubmissionError, focus} from 'redux-form'
 import {required,noEmpty, tooShort, isNumber} from './validators'
 import {serverValidate} from './asyncValidator'
-import{TextField} from 'material-ui/TextField'
+import TextField from 'material-ui/TextField'
 import Textinput from './components/textInput'
 export class App extends Component {
   submitMe(value){
